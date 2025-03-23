@@ -53,7 +53,7 @@ namespace QoZ {
 
             std::vector <uint8_t> interpAlgo_list;
             std::vector <uint8_t> interpDirection_list;
-            std::vector <uint8_t> cubicSplineType_list;
+            //std::vector <uint8_t> cubicSplineType_list;
             
 
 
