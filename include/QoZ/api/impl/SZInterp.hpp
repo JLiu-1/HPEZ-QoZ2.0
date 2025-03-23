@@ -568,10 +568,8 @@ void setLorenzoFixRates(QoZ::Config &conf,double rel_bound){
 template<class T, QoZ::uint N>
 double Tuning(QoZ::Config &conf, T *data){
    
-    T rng=conf.rng;
-    double rel_bound = conf.relErrorBound>0?conf.relErrorBound:conf.absErrorBound/rng;
-    if(rel_bound>=3e-4 or conf.tuningTarget==QoZ::TUNING_TARGET_SSIM)//rencently changed, need to fix later
-        conf.testLorenzo=0;
+
+
    // QoZ::Timer timer(true);
     //timer.stop("")
     if(conf.QoZ>0){
