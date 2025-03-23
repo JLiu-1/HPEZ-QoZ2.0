@@ -746,7 +746,7 @@ double Tuning(QoZ::Config &conf, T *data){
         if(conf.relErrorBound<=0)
             conf.relErrorBound=conf.absErrorBound/conf.rng;
         double rel_bound = conf.relErrorBound;
-        if(rel_bound>=3e-4 or conf.tuningTarget==TUNING_TARGET_SSIM)//rencently changed, need to fix later
+        if(rel_bound>=3e-4 or conf.tuningTarget==QoZ::TUNING_TARGET_SSIM)//rencently changed, need to fix later
             conf.testLorenzo=0;
         if (conf.testLorenzo>0)
             setLorenzoFixRates(conf,rel_bound);
