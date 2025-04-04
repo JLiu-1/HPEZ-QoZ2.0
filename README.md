@@ -1,3 +1,7 @@
+# QoI-HPEZ
+This is the code branch for baseline QoI-HPEZ. 
+Please check the readme of QoI-SZ3 (https://github.com/jpcoding/SZ3/tree/vldb_test_version) about how to add QoI constraints to the HPEZ compression. The original readme of HPEZ is below.
+
 # HPEZ
 
 ## Introduction
