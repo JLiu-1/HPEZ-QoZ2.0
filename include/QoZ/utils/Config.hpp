@@ -445,8 +445,8 @@ namespace QoZ {
         uint8_t errorBoundMode = EB_ABS;
         uint8_t tuningTarget=TUNING_TARGET_RD;
         double absErrorBound;
-        double relErrorBound=-1.0;
-        double psnrErrorBound;
+        double relErrorBound = -1.0;
+        double psnrErrorBound = -1.0;
         double l2normErrorBound;
         //double prewave_absErrorBound;
         double rng=-1;
@@ -588,6 +588,7 @@ namespace QoZ {
         double qoi_lin_B = 0.0;
         bool analytical = false;
         bool QoIdispatch = true;
+
 
         //std::shared_ptr<QoZ::concepts::QoIInterface<T, N>> qoiPtr = nullptr;
 

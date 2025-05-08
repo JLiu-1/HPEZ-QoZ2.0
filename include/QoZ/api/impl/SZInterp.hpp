@@ -115,7 +115,7 @@ char *SZ_compress_Interp(QoZ::Config &conf, T *data, size_t &outSize) {
 
     std::vector<T> ori_data;
     bool global_correction = conf.qoi > 0 and conf.qoiRegionMode==1;
-    if(global_correction){
+    if(global_correction or conf.psnrErrorBound >= 0){
         ori_data = std::vector<T>(data,data+conf.num);
     }
     if (conf.qoi>0 and !conf.use_global_eb){
@@ -262,6 +262,62 @@ char *SZ_compress_Interp(QoZ::Config &conf, T *data, size_t &outSize) {
 
                 
             
+        }
+        else if (conf.psnrErrorBound >= 0){
+            double v1 = 20 * log10(conf.rng) - conf.psnrErrorBound;
+            double v2 = v1 / (10);
+            double mse_bound = pow(10, v2);
+
+            double current_mse = 0.0;
+            for(size_t i = 0; i < conf.num; i++){
+                current_mse += (ori_data[i] - data[i]) * (ori_data[i] - data[i]);
+            }
+            current_mse /= conf.num;
+
+            if(current_mse <= mse_bound){
+                 offset_size=0;
+            
+                memcpy(cmpData+outSize,&offset_size,sizeof(size_t));
+                outSize+=sizeof(size_t);
+            }
+            else{
+
+                bool correcting = true;
+
+                for(size_t i = 0; i < conf.num; i++){
+                    if(!correcting or fabs(ori_data[i] - data[i]) <= conf.absErrorBound/conf.error_std_rate)
+                        ori_data[i] = 0.0;
+                    else{
+                        current_mse -= (ori_data[i] - data[i]) * (ori_data[i] - data[i]) / conf.num;
+                        ori_data[i] -= data[i];
+                        if(current_mse <= mse_bound)
+                            correcting = false;
+                    }
+                }
+
+                auto zstd = QoZ::Lossless_zstd();
+                
+                
+                QoZ::uchar *lossless_data = zstd.compress(reinterpret_cast< QoZ::uchar *>(ori_data.data()),
+                                                             conf.num*sizeof(T),
+                                                             offset_size);
+                size_t newSize = outSize + offset_size + QoZ::Config::size_est()  + 100;
+                char * newcmpData = new char[newSize];
+                memcpy(newcmpData,cmpData,outSize);
+                delete [] cmpData;
+                memcpy(newcmpData+outSize,lossless_data,offset_size);
+                
+                outSize+=offset_size;
+                delete []lossless_data;
+                memcpy(newcmpData+outSize,&offset_size,sizeof(size_t));
+                outSize+=sizeof(size_t);
+                cmpData = newcmpData;
+            }
+
+
+
+
+
         }
         else{
             offset_size=0;
