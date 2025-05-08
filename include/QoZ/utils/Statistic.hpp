@@ -50,7 +50,7 @@ namespace QoZ {
                 double rng = (range > 0) ? range : QoZ::data_range(data, conf.num);
                 conf.rng=rng;
                 //conf.absErrorBound = computeABSErrBoundFromPSNR(conf.psnrErrorBound, 0.99, rng);
-                conf.absErrorBound = computeABSErrBoundFromPSNR(conf.psnrErrorBound, conf.error_std_rate, rng);
+                conf.absErrorBound = computeABSErrBoundFromPSNR_new(conf.psnrErrorBound, conf.error_std_rate, rng);
                 conf.relErrorBound=conf.absErrorBound / rng;
             } else if (conf.errorBoundMode == EB_L2NORM) {
                 conf.errorBoundMode = EB_ABS;
